@@ -20,6 +20,8 @@ const startButton = document.querySelector('.start-button'),
       formCalculate = document.querySelector('.form-calculate'),
       endButton = document.querySelector('.end-button'),
       fastRange = document.querySelector('.fast-range'),
+      switchElem = document.querySelector('.switcher'),
+      switchElemValue = document.querySelector('.switcher > .checkbox-label'),
       total = document.querySelector('.total');
 
 function showElm(elem){
