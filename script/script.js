@@ -20,6 +20,7 @@ const startButton = document.querySelector('.start-button'),
       formCalculate = document.querySelector('.form-calculate'),
       endButton = document.querySelector('.end-button'),
       fastRange = document.querySelector('.fast-range'),
+      totalPriceSum = document.querySelector('.total_price__sum'),
       total = document.querySelector('.total');
 
 function showElm(elem){
@@ -30,11 +31,38 @@ function hideElm(elem){
     elem.style.display = 'none';
 }
 
+function priceCalculation(elem){
+    let result = 0,
+        index = 0;
+
+    if (elem.name === 'whichSite'){
+        for (const elem of formCalculate.elements){
+            if (item.type === 'checkbox'){
+                item.checked = false;
+            }
+        }
+        hideElm(fastRange);
+    }
+
+    for (const elem of formCalculate.elements){
+        if (item.name === 'whichSite' && item.checked){
+            index = DATA.whichSite.indexOf(item.value);
+        }
+    }
+
+    result += DATA.price[index];
+    totalPriceSum.textContent = result;
+}
+
 function handlerCallBackForm(event) {
     const target = event.target;
     
     if (target.classList.contains('want-faster')) {
         let c = target.checked ? showElm(fastRange) : hideElm(fastRange);
+    }
+
+    if(target.classList.contains('calc-handler')){
+        priceCalculation(target);
     }
 }
 
