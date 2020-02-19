@@ -12,7 +12,7 @@ const DATA ={
     sendOrder: 500,
     deadlineDay:[[2,7],[3,10],[7,14]],
     deadlinePercent: [20, 17, 15]
-}
+};
 
 const startButton = document.querySelector('.start-button'),
       firstScreen = document.querySelector('first-screen'),
@@ -21,6 +21,9 @@ const startButton = document.querySelector('.start-button'),
       endButton = document.querySelector('.end-button'),
       fastRange = document.querySelector('.fast-range'),
       totalPriceSum = document.querySelector('.total_price__sum'),
+      adaptiveCheck = document.querySelector('#adapt'),
+      mobileTemplatesCheck = document.querySelector('#mobileTemplates'),
+      mobileTemplatesField = document.querySelector('#mobileTemplates-field'),
       total = document.querySelector('.total');
 
 function showElm(elem){
@@ -33,10 +36,11 @@ function hideElm(elem){
 
 function priceCalculation(elem){
     let result = 0,
+        options = [],
         index = 0;
 
     if (elem.name === 'whichSite'){
-        for (const elem of formCalculate.elements){
+        for (const item of formCalculate.elements){
             if (item.type === 'checkbox'){
                 item.checked = false;
             }
@@ -44,11 +48,29 @@ function priceCalculation(elem){
         hideElm(fastRange);
     }
 
-    for (const elem of formCalculate.elements){
+    for (const item of formCalculate.elements){
         if (item.name === 'whichSite' && item.checked){
             index = DATA.whichSite.indexOf(item.value);
+        } else if (item.classList.contains('calc-handler') && item.checked) {
+            options.push(item.value);
         }
     }
+
+    options.forEach(function(key){
+        if (typeof(DATA[key]) === 'number'){
+            if (key === 'sendOrder'){
+                result += DATA[key];
+            } else {
+                result += DATA.price[index] * DATA[key] / 100;
+            }
+        } else {
+            if (key === 'desktopTemplates'){
+                result += DATA.price[index] * DATA[key][index] / 100;
+            } else {
+                result += DATA[key][index];
+            }
+        }
+    });
 
     result += DATA.price[index];
     totalPriceSum.textContent = result;
@@ -58,7 +80,7 @@ function handlerCallBackForm(event) {
     const target = event.target;
     
     if (target.classList.contains('want-faster')) {
-        let c = target.checked ? showElm(fastRange) : hideElm(fastRange);
+        target.checked ? showElm(fastRange) : hideElm(fastRange);
     }
 
     if(target.classList.contains('calc-handler')){
@@ -81,3 +103,16 @@ endButton.addEventListener('click', function(){
 });
 
 formCalculate.addEventListener('change', handlerCallBackForm);
+
+mobileTemplatesField.style.opacity = '0.3';
+adaptiveCheck.addEventListener('click', function(){
+    if (adaptiveCheck.checked == true){
+        mobileTemplatesField.style.opacity = '1';
+        mobileTemplatesCheck.disabled = false;
+    } else {
+        mobileTemplatesField.style.opacity = '0.3';
+        mobileTemplatesCheck.checked = false;
+        mobileTemplatesCheck.disabled = true;
+    }
+    
+});
